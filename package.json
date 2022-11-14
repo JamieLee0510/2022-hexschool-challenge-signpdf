@@ -2,6 +2,7 @@
     "name": "hexschool_challenge_pdf",
     "version": "0.1.0",
     "private": true,
+    "homepage": "https://lidingyu0510.github.io/2022-hexschool-challenge-signpdf/",
     "dependencies": {
         "@reduxjs/toolkit": "^1.9.0",
         "@testing-library/jest-dom": "^5.16.5",
