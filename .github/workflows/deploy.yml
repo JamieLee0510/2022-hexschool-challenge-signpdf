@@ -31,7 +31,7 @@ jobs:
                   path: ./build
     deploy:
         name: Deploy
-        needs: build
+        needs: build_test
         runs-on: ubuntu-latest
         if: github.ref == 'refs/heads/main'
 
