@@ -8,7 +8,7 @@ export interface CounterState {
     status: 'idle' | 'loading' | 'failed'
 }
 
-const initialState: CounterState = {
+export const defaultCounterState: CounterState = {
     value: 0,
     status: 'idle',
 }
@@ -26,7 +26,7 @@ export const incrementAsync = createAsyncThunk('counter/fetchCount', async (amou
 
 export const counterSlice = createSlice({
     name: 'counter',
-    initialState,
+    initialState: defaultCounterState,
     // The `reducers` field lets us define reducers and generate associated actions
     reducers: {
         increment: (state) => {

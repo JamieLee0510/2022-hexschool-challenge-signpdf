@@ -1,6 +1,5 @@
 /** @type {import('jest').Config} */
 
-// const { pathsToModuleNameMapper } = require('ts-jest/utils')
 const { pathsToModuleNameMapper } = require('ts-jest')
 const aliases = require('./tsconfig.alias.json')
 

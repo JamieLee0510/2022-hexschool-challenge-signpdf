@@ -1,0 +1,16 @@
+{
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@base/*": ["src/*"],
+            "@layouts/*": ["src/app/components/layouts/*"],
+            "@themes/*": ["src/app/themes/*"],
+            "@components/*": ["src/app/components/*"],
+            "@store/*": ["src/app/store/*"],
+            "@lang/*": ["src/app/i18n/lang/*"],
+            "@hooks/*": ["src/app/hooks/*"],
+            "@utils/*": ["src/utils/*"],
+            "@features/*": ["src/features/*"]
+        }
+    }
+}
