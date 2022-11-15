@@ -1,4 +1,5 @@
 .eslintrc.js
 jest.config.js
+craco.config.js
 fileMock.js
 styleMock.js
