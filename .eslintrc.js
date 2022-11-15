@@ -109,6 +109,7 @@ module.exports = {
             'never',
             {
                 scss: 'always',
+                png: 'always',
             },
         ],
 
