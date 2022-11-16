@@ -1,16 +1,16 @@
 {
   "files": {
-    "main.css": "/2022-hexschool-challenge-signpdf/static/css/main.546ea25f.css",
-    "main.js": "/2022-hexschool-challenge-signpdf/static/js/main.49bc7206.js",
+    "main.css": "/2022-hexschool-challenge-signpdf/static/css/main.0e627321.css",
+    "main.js": "/2022-hexschool-challenge-signpdf/static/js/main.251e0f39.js",
     "static/js/787.2054422b.chunk.js": "/2022-hexschool-challenge-signpdf/static/js/787.2054422b.chunk.js",
-    "static/media/logo.svg": "/2022-hexschool-challenge-signpdf/static/media/logo.b2e5a01e505f739f1484b881277d5186.svg",
+    "static/media/icon03.png": "/2022-hexschool-challenge-signpdf/static/media/icon03.ae4e1ed88ffbbe97c0bd.png",
     "index.html": "/2022-hexschool-challenge-signpdf/index.html",
-    "main.546ea25f.css.map": "/2022-hexschool-challenge-signpdf/static/css/main.546ea25f.css.map",
-    "main.49bc7206.js.map": "/2022-hexschool-challenge-signpdf/static/js/main.49bc7206.js.map",
+    "main.0e627321.css.map": "/2022-hexschool-challenge-signpdf/static/css/main.0e627321.css.map",
+    "main.251e0f39.js.map": "/2022-hexschool-challenge-signpdf/static/js/main.251e0f39.js.map",
     "787.2054422b.chunk.js.map": "/2022-hexschool-challenge-signpdf/static/js/787.2054422b.chunk.js.map"
   },
   "entrypoints": [
-    "static/css/main.546ea25f.css",
-    "static/js/main.49bc7206.js"
+    "static/css/main.0e627321.css",
+    "static/js/main.251e0f39.js"
   ]
 }
