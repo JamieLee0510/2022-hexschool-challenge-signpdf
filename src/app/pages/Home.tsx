@@ -5,7 +5,7 @@ import productNameImg from '@assets/landing/main02_icon05.png'
 import UploadArea from '@base/features/pdfFile/UploadArea'
 import { ImgStyleProps, primaryColor, primaryDarkColor } from '@base/utils/styles'
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 
 import DotElement from '../components/DotElement'
@@ -31,6 +31,7 @@ const Container = styled.div`
 
 export default function Home() {
     const navigate = useNavigate()
+    const location = useLocation()
     return (
         <BasicLayout>
             <Container>
@@ -81,6 +82,14 @@ export default function Home() {
                     }}
                 >
                     第一頁
+                </button>
+                <button
+                    type='button'
+                    onClick={() => {
+                        console.log('route:', location.pathname)
+                    }}
+                >
+                    test route path
                 </button>
             </Container>
         </BasicLayout>

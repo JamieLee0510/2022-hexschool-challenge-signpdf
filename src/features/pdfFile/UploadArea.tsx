@@ -1,7 +1,7 @@
 import Button from '@base/app/components/Button'
 import { disableDropSideEffect } from '@base/utils/helper'
 import { bgColor, primaryColor } from '@base/utils/styles'
-import React, { useEffect, useRef } from 'react'
+import React, { useCallback, useEffect, useRef } from 'react'
 import styled from 'styled-components'
 
 const svgBg = bgColor.replace('#', '%23')
@@ -41,14 +41,14 @@ export default function UploadArea() {
         fileHandler(target.files![0])
     }
 
-    const consoleDemo = (event: DragEvent) => {
+    const consoleDemo = useCallback((event: DragEvent) => {
         disableDropSideEffect(event)
         const dt = event.dataTransfer
         fileHandler(dt!.files[0])
         // const file = dt!.files[0]
         // console.log(file)
         // console.log(file!.name)
-    }
+    }, [])
 
     const fileHandler = (file: File) => {
         if (file.size > 10000000) {
@@ -59,15 +59,21 @@ export default function UploadArea() {
     }
 
     useEffect(() => {
-        uploadRef.current!.addEventListener('dragenter', disableDropSideEffect, false)
-        uploadRef.current!.addEventListener('dragover', disableDropSideEffect, false)
-        uploadRef.current!.addEventListener('drop', consoleDemo, false)
-        return () => {
-            uploadRef.current!.removeEventListener('dragenter', disableDropSideEffect)
-            uploadRef.current!.removeEventListener('dragover', disableDropSideEffect)
-            uploadRef.current!.removeEventListener('drop', consoleDemo)
+        const uploadDom = uploadRef.current
+        if (uploadDom !== null) {
+            uploadDom.addEventListener('dragenter', disableDropSideEffect, false)
+            uploadDom.addEventListener('dragover', disableDropSideEffect, false)
+            uploadDom.addEventListener('drop', consoleDemo, false)
         }
-    }, [])
+
+        return () => {
+            if (uploadDom !== null) {
+                uploadDom.removeEventListener('dragenter', disableDropSideEffect)
+                uploadDom.removeEventListener('dragover', disableDropSideEffect)
+                uploadDom.removeEventListener('drop', consoleDemo)
+            }
+        }
+    }, [consoleDemo, uploadRef])
 
     return (
         <Container ref={uploadRef}>
