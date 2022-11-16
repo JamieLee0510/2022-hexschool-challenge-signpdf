@@ -6,6 +6,8 @@ import ImageWrapper from '@components/ImageWrapper'
 import React from 'react'
 import styled from 'styled-components'
 
+import Button from '../Button'
+
 const Container = styled.div`
     width: 100%;
     height: 50px;
@@ -62,12 +64,18 @@ export default function FunctionBar() {
                 </IconContainer>
             </FuncIconRow>
             <BtnContainer>
-                <button className='primary-btn' type='button'>
-                    test
-                </button>
-                <button className='primary-btn' type='button'>
-                    test
-                </button>
+                <Button
+                    text='hihi'
+                    callBack={() => {
+                        console.log('ih')
+                    }}
+                />
+                <Button
+                    text='hihi'
+                    callBack={() => {
+                        console.log('ih')
+                    }}
+                />
             </BtnContainer>
         </Container>
     )

@@ -18,7 +18,7 @@ const Contaner = styled.div`
 
     flex-direction: column;
     overflow-x: hidden;
-    overflow-y: scroll;
+    overflow-y: hidden;
 `
 const Logo = styled.div`
     width: 200px;
