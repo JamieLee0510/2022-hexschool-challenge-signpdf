@@ -43,6 +43,12 @@ const BtnContainer = styled.div`
     margin-right: 100px;
 `
 
+const ImageCssWrapper = styled.div`
+    background-image: url(${dateIcon});
+    width: 100%;
+    height: auto;
+`
+
 export default function FunctionBar() {
     return (
         <Container>
@@ -57,6 +63,7 @@ export default function FunctionBar() {
                 <Line />
                 <IconContainer>
                     <ImageWrapper imgUrl={dateIcon} />
+                    {/* <ImageCssWrapper /> */}
                 </IconContainer>
                 <Line />
                 <IconContainer>
