@@ -2,6 +2,7 @@ import manImg from '@assets/landing/main02_icon01.png'
 import womanImg from '@assets/landing/main02_icon02.png'
 import boardImg from '@assets/landing/main02_icon03.png'
 import productNameImg from '@assets/landing/main02_icon05.png'
+import { setLoading } from '@base/features/loading/loadingSlice'
 import UploadArea from '@base/features/pdfFile/UploadArea'
 import { ImgStyleProps, primaryColor, primaryDarkColor } from '@base/utils/styles'
 import React from 'react'
@@ -11,6 +12,7 @@ import styled from 'styled-components'
 import DotElement from '../components/DotElement'
 import ImageWrapper from '../components/ImageWrapper'
 import BasicLayout from '../components/layouts/BasicLayout'
+import { useAppDispatch } from '../hooks'
 
 const ImageDiv = styled.div<ImgStyleProps>`
     position: absolute;
@@ -32,6 +34,9 @@ const Container = styled.div`
 export default function Home() {
     const navigate = useNavigate()
     const location = useLocation()
+
+    const dispatch = useAppDispatch()
+
     return (
         <BasicLayout>
             <Container>
@@ -74,22 +79,23 @@ export default function Home() {
                         <ImageWrapper imgUrl={manImg} />
                     </ImageDiv>
                 </ImageDiv>
-                <h1>hihi</h1>
+
                 <button
                     type='button'
                     onClick={() => {
-                        navigate('/step1')
+                        // navigate('/step1')
+                        dispatch(setLoading(false))
                     }}
                 >
-                    第一頁
+                    not loading
                 </button>
                 <button
                     type='button'
                     onClick={() => {
-                        console.log('route:', location.pathname)
+                        dispatch(setLoading(true))
                     }}
                 >
-                    test route path
+                    loading
                 </button>
             </Container>
         </BasicLayout>
