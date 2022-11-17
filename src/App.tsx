@@ -2,7 +2,6 @@ import React from 'react'
 import { RouterProvider } from 'react-router'
 
 import router from './app/pages/router'
-import { Counter } from './features/counter/Counter'
 
 function App() {
     return <RouterProvider router={router} />

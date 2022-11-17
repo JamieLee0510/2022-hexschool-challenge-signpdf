@@ -1,8 +1,16 @@
-import Button from '@base/app/components/Button'
-import { disableDropSideEffect } from '@base/utils/helper'
+import { useAppDispatch, useAppSelector } from '@base/app/hooks'
+import { disableDropSideEffect, isProperFile } from '@base/utils/helper'
 import { bgColor, primaryColor } from '@base/utils/styles'
+import { UploadFile } from '@base/utils/types'
+import Button from '@components/Button'
+import Loading from '@features/loading/Loading'
+import { setLoading } from '@features/loading/loadingSlice'
 import React, { useCallback, useEffect, useRef } from 'react'
+import { useNavigate } from 'react-router'
 import styled from 'styled-components'
+
+import { setPdfData, setPdfFile } from './pdfSlice'
+import uploadFile from './useUploadFile'
 
 const svgBg = bgColor.replace('#', '%23')
 
@@ -22,41 +30,53 @@ const Container = styled.div`
     transform: translate(-50%);
 `
 
-const InputLabel = styled.label`
-background-color: green;
-width: 70%;
-height: 70px;
-border: solid white;
-border-radius: 30px;
-font-size:'1.5rem;
-color: white;
-`
-
 export default function UploadArea() {
     const uploadRef = useRef<HTMLDivElement>(null)
+    const dispatch = useAppDispatch()
+    const navigate = useNavigate()
+    const isLoading = useAppSelector((state) => state.loading.value.isLoading)
+
+    const uploadSuccess = useCallback(
+        () => (data: { type: UploadFile; data: string | Array<string> }, file: Uint8Array) => {
+            dispatch(setPdfData(data))
+            dispatch(setPdfFile(file))
+            dispatch(setLoading(false))
+            navigate('/step1')
+        },
+        [dispatch, navigate],
+    )
+
+    const fileHandler = useCallback(
+        (file: File) => {
+            dispatch(setLoading(true))
+
+            if (!isProperFile(file.type)) {
+                alert(`the file type is ${file.type}, please upload a pdf or png/jpg file`)
+                return
+            }
+
+            if (file.size > 10000000) {
+                alert(`the size of file ${file.name} is over 10MB, please use other one`)
+                return
+            }
+            uploadFile(file, uploadSuccess)
+        },
+        [dispatch, uploadSuccess],
+    )
 
     function onFileChange(event: React.ChangeEvent) {
         const target = event.target as HTMLInputElement
-
         fileHandler(target.files![0])
     }
 
-    const consoleDemo = useCallback((event: DragEvent) => {
-        disableDropSideEffect(event)
-        const dt = event.dataTransfer
-        fileHandler(dt!.files[0])
-        // const file = dt!.files[0]
-        // console.log(file)
-        // console.log(file!.name)
-    }, [])
-
-    const fileHandler = (file: File) => {
-        if (file.size > 10000000) {
-            alert(`the size of file ${file.name} is over 10MB, please use other one`)
-        } else {
-            //  setFile(file)
-        }
-    }
+    const consoleDemo = useCallback(
+        (event: DragEvent) => {
+            disableDropSideEffect(event)
+            const dt = event.dataTransfer
+            fileHandler(dt!.files[0])
+        },
+        [fileHandler],
+    )
 
     useEffect(() => {
         const uploadDom = uploadRef.current
@@ -77,17 +97,23 @@ export default function UploadArea() {
 
     return (
         <Container ref={uploadRef}>
-            <div>或拖曳檔案到此處</div>
-            <label htmlFor='upload-file' className='upload-btn'>
-                簽署新文件
-                <input
-                    id='upload-file'
-                    type='file'
-                    style={{ display: 'none' }}
-                    onChange={onFileChange}
-                />
-            </label>
-            <div>(限10MB內的PDF或JPG檔)</div>
+            {!isLoading && (
+                <>
+                    <div>或拖曳檔案到此處</div>
+                    <label htmlFor='upload-file' className='upload-btn'>
+                        <input
+                            id='upload-file'
+                            type='file'
+                            style={{ display: 'none' }}
+                            onChange={onFileChange}
+                        />
+                        簽署新文件
+                    </label>
+                    <div>(限10MB內的PDF或JPG檔)</div>
+                </>
+            )}
+            {isLoading && <Loading loadingText='上傳中' size={100} />}
+            <div id='canvas-div' style={{ display: 'none' }} />
         </Container>
     )
 }

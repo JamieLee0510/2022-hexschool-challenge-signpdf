@@ -4,8 +4,8 @@ import { PureChildrenProps } from '@base/utils/types'
 import React, { ReactElement, ReactNode } from 'react'
 import styled from 'styled-components'
 
+import Loading from '../../../features/loading/Loading'
 import ImageWrapper from '../ImageWrapper'
-import Loading from '../Loading'
 
 const Contaner = styled.div`
     width: 95%;
