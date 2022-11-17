@@ -9,7 +9,7 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
-import { setPdfData } from './pdfSlice'
+import { setPdfData, setPdfFile } from './pdfSlice'
 import uploadFile from './useUploadFile'
 
 const svgBg = bgColor.replace('#', '%23')
@@ -37,12 +37,13 @@ export default function UploadArea() {
     const isLoading = useAppSelector((state) => state.loading.value.isLoading)
 
     const uploadSuccess = useCallback(
-        () => (data: { type: UploadFile; data: string | Array<string> }) => {
+        () => (data: { type: UploadFile; data: string | Array<string> }, file: Uint8Array) => {
             dispatch(setPdfData(data))
+            dispatch(setPdfFile(file))
             dispatch(setLoading(false))
             navigate('/step1')
         },
-        [dispatch],
+        [dispatch, navigate],
     )
 
     const fileHandler = useCallback(
@@ -65,7 +66,6 @@ export default function UploadArea() {
 
     function onFileChange(event: React.ChangeEvent) {
         const target = event.target as HTMLInputElement
-
         fileHandler(target.files![0])
     }
 
@@ -101,13 +101,13 @@ export default function UploadArea() {
                 <>
                     <div>或拖曳檔案到此處</div>
                     <label htmlFor='upload-file' className='upload-btn'>
-                        簽署新文件
                         <input
                             id='upload-file'
                             type='file'
                             style={{ display: 'none' }}
                             onChange={onFileChange}
                         />
+                        簽署新文件
                     </label>
                     <div>(限10MB內的PDF或JPG檔)</div>
                 </>

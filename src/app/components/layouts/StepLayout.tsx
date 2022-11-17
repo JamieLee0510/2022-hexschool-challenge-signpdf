@@ -8,7 +8,7 @@ export default function StepLayout({ children }: PureChildrenProps) {
     return (
         <BasicLayout>
             <FunctionBar />
-            <h1>hihi</h1>
+
             {children}
         </BasicLayout>
     )

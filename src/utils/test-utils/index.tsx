@@ -1,4 +1,3 @@
-import { defaultCounterState } from '@features/counter/counterSlice'
 import { configureStore } from '@reduxjs/toolkit'
 import { render as rtlRender, RenderOptions, RenderResult } from '@testing-library/react'
 import { createMemoryHistory, MemoryHistory } from 'history'
@@ -8,9 +7,7 @@ import { Router } from 'react-router'
 
 import { configureSelfStore, RootState } from '../../app/store'
 
-const defaultState = {
-    counter: defaultCounterState,
-}
+const defaultState = {}
 
 type CustomRenderOptions = {
     preloadedState?: RootState

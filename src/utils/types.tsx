@@ -7,4 +7,7 @@ export enum UploadFile {
     PDF = 'pdf',
 }
 
-export type UploadPdfFunc = () => (data: { type: UploadFile; data: string | Array<string> }) => void
+export type UploadPdfFunc = () => (
+    data: { type: UploadFile; data: string | Array<string> },
+    file: Uint8Array,
+) => void

@@ -3,12 +3,14 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export type PdfState = {
     pdfData: Array<string>
+    pdfFile: Uint8Array | null
     imageData?: string
     fileType: UploadFile
 }
 
 const initialState: PdfState = {
     pdfData: [],
+    pdfFile: null,
     fileType: UploadFile.PDF,
 }
 
@@ -33,11 +35,14 @@ export const pdfSlice = createSlice({
                     }
 
                     state.pdfData = action.payload.data as Array<string>
-                    console.log(state.pdfData.length)
+                    console.log(action.payload.data)
                     break
                 default:
                     state.imageData = ''
             }
+        },
+        setPdfFile: (state, action: PayloadAction<Uint8Array>) => {
+            state.pdfFile = action.payload
         },
 
         emptyPdfData: (state) => {
@@ -56,6 +61,6 @@ export const pdfSlice = createSlice({
     },
 })
 
-export const { setPdfData, emptyPdfData, signPdfData } = pdfSlice.actions
+export const { setPdfData, setPdfFile, emptyPdfData, signPdfData } = pdfSlice.actions
 
 export default pdfSlice.reducer

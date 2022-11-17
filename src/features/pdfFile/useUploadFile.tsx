@@ -87,10 +87,13 @@ const pdfToConvasUrl = (file: File, callback: UploadPdfFunc) => {
             )
         }
         Promise.all([...promises]).then(() => {
-            success({
-                type: UploadFile.PDF,
-                data: dataList,
-            })
+            success(
+                {
+                    type: UploadFile.PDF,
+                    data: dataList,
+                },
+                pdfData,
+            )
         })
     }
     fileReader.readAsArrayBuffer(file)
