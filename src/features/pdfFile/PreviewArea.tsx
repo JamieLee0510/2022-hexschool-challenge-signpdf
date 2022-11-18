@@ -23,21 +23,15 @@ const Container = styled.div`
 export default function PreviewArea() {
     const canvasRef = useRef<HTMLCanvasElement>(null)
     const pdfFile = useAppSelector((state) => state.pdf.pdfFile)
-    const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
+    const [canvas, setCanvas] = useState<fabric.Canvas | null>(null)
     const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null)
 
     const [prev, next] = useRenderPdf(canvas!, ctx!)
 
     useEffect(() => {
-        const c = canvasRef.current
+        const c = new fabric.Canvas(canvasRef.current)
         setCanvas(c)
-        if (c) setCtx(c.getContext('2d'))
     }, [canvasRef])
-
-    // useEffect(() => {
-    //     console.log('scale:', scale)
-    //     ctx?.scale(scale, scale)
-    // }, [ctx, scale])
 
     const test = () => {
         const dataURL = canvas!.toDataURL()
