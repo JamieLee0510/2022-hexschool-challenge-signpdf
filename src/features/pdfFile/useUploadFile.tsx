@@ -1,8 +1,8 @@
 import { useAppDispatch } from '@base/app/hooks'
 import { isPdf } from '@base/utils/helper'
 import { UploadFile, UploadPdfFunc } from '@base/utils/types'
+import * as pdfjs from 'pdfjs-dist/build/pdf'
 import { useState } from 'react'
-import { pdfjs } from 'react-pdf'
 
 pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 

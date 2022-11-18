@@ -1,6 +1,6 @@
 import { useAppDispatch, useAppSelector } from '@base/app/hooks'
+import * as pdfjs from 'pdfjs-dist/build/pdf'
 import React, { useCallback, useEffect, useState } from 'react'
-import { pdfjs } from 'react-pdf'
 
 const useRenderPdf = (canvas: HTMLCanvasElement, ctx: CanvasRenderingContext2D) => {
     const pdfFile = useAppSelector((state) => state.pdf.pdfFile)
