@@ -8,6 +8,7 @@ export interface BtnStyleProps {
     width?: string
     height?: string
     fontSize?: string
+    btnColor?: string
 }
 
 export interface ImgStyleProps {

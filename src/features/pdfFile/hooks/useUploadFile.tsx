@@ -88,7 +88,10 @@ const pdfToConvasUrl = (file: File, callback: UploadPdfFunc) => {
                 }),
             )
         }
-        Promise.all([...promises]).then(() => {
+
+        // TODO: need to confirm the order of pdf data
+        Promise.all([...promises]).then((resolve) => {
+            console.log(resolve)
             success({
                 fileType: UploadFile.PDF,
                 data: dataList,
