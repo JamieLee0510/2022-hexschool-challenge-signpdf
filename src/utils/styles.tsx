@@ -29,3 +29,7 @@ export interface DotStyleProps {
     right?: number | string
     bottom?: number | string
 }
+
+export interface LineStyleProps {
+    color: string
+}

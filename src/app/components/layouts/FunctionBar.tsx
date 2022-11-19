@@ -2,6 +2,7 @@ import dateIcon from '@assets/funcIcon/icon_calendar.png'
 import checkIcon from '@assets/funcIcon/icon_checked.png'
 import penIcon from '@assets/funcIcon/icon_pen.png'
 import textIcon from '@assets/funcIcon/icon_text.png'
+import { FuncBarOptions, Step } from '@base/utils/types'
 import ImageWrapper from '@components/ImageWrapper'
 import React from 'react'
 import styled from 'styled-components'
@@ -49,40 +50,36 @@ const ImageCssWrapper = styled.div`
     height: auto;
 `
 
-export default function FunctionBar() {
+export default function FunctionBar({
+    step,
+    funcBarOptions,
+}: {
+    step: Step
+    funcBarOptions: FuncBarOptions
+}) {
     return (
         <Container>
             <FuncIconRow>
-                <IconContainer>
+                <IconContainer onClick={funcBarOptions.pen}>
                     <ImageWrapper imgUrl={penIcon} />
                 </IconContainer>
                 <Line />
-                <IconContainer>
+                <IconContainer onClick={funcBarOptions.text}>
                     <ImageWrapper imgUrl={textIcon} />
                 </IconContainer>
                 <Line />
-                <IconContainer>
+                <IconContainer onClick={funcBarOptions.date}>
                     <ImageWrapper imgUrl={dateIcon} />
                     {/* <ImageCssWrapper /> */}
                 </IconContainer>
                 <Line />
-                <IconContainer>
+                <IconContainer onClick={funcBarOptions.checked}>
                     <ImageWrapper imgUrl={checkIcon} />
                 </IconContainer>
             </FuncIconRow>
             <BtnContainer>
-                <Button
-                    text='hihi'
-                    callBack={() => {
-                        console.log('ih')
-                    }}
-                />
-                <Button
-                    text='hihi'
-                    callBack={() => {
-                        console.log('ih')
-                    }}
-                />
+                <Button text={funcBarOptions.btn1.text} callBack={funcBarOptions.btn1.func} />
+                <Button text={funcBarOptions.btn2.text} callBack={funcBarOptions.btn2.func} />
             </BtnContainer>
         </Container>
     )

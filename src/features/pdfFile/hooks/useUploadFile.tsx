@@ -93,6 +93,7 @@ const pdfToConvasUrl = (file: File, callback: UploadPdfFunc) => {
                 fileType: UploadFile.PDF,
                 data: dataList,
                 size: pdfSize,
+                name: file.name,
             })
         })
     }

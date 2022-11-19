@@ -8,7 +8,7 @@ export type PdfState = {
 }
 
 const initialState: PdfState = {
-    value: { data: [], size: { width: 800, height: 530 }, fileType: UploadFile.PDF },
+    value: { name: '', data: [], size: { width: 800, height: 530 }, fileType: UploadFile.PDF },
     scale: 1,
 }
 
