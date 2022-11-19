@@ -1,3 +1,4 @@
+import { PdfState } from '@features/pdfFile/pdfSlice'
 import React, { ReactElement, ReactNode } from 'react'
 
 export type PureChildrenProps = { children: ReactNode }
@@ -7,7 +8,15 @@ export enum UploadFile {
     PDF = 'pdf',
 }
 
-export type UploadPdfFunc = () => (
-    data: { type: UploadFile; data: string | Array<string> },
-    file: Uint8Array,
-) => void
+export type PdfData = {
+    size: FormatSize
+    data: Array<string>
+    fileType: UploadFile
+}
+
+export type UploadPdfFunc = () => (data: PdfData) => void
+
+export type FormatSize = {
+    width: number
+    height: number
+}
