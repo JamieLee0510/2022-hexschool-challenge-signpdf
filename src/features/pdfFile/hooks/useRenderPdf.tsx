@@ -16,8 +16,8 @@ export const scaleAndPositionImage = (
 ) => {
     const canvasWidth = size.width
     const canvasHeight = size.height
-    canvas.setWidth(canvasWidth)
-    canvas.setHeight(canvasHeight)
+    canvas!.setWidth(canvasWidth)
+    canvas!.setHeight(canvasHeight)
 
     // 原本 canvas 的長寬比
     const canvasAspect = canvasWidth / canvasHeight
@@ -53,7 +53,7 @@ export const scaleAndPositionImage = (
     })
 }
 
-const useRenderPdf = (canvas: fabric.Canvas, ctx: CanvasRenderingContext2D) => {
+const useRenderPdf = (canvas: fabric.Canvas | null, ctx: CanvasRenderingContext2D | null) => {
     const pdfData = useAppSelector((state) => state.pdf.value)
     const scaleSize = useAppSelector((state) => ({
         height: state.pdf.value.size.height * state.pdf.scale,
@@ -62,9 +62,11 @@ const useRenderPdf = (canvas: fabric.Canvas, ctx: CanvasRenderingContext2D) => {
     const [page, setPage] = useState(1)
 
     const renderPdf = useCallback(() => {
-        fabric.Image.fromURL(pdfData.data[page - 1], (img) => {
-            scaleAndPositionImage(canvas, img, scaleSize)
-        })
+        if (canvas !== null) {
+            fabric.Image.fromURL(pdfData.data[page - 1], (img) => {
+                scaleAndPositionImage(canvas, img, scaleSize)
+            })
+        }
     }, [canvas, page, pdfData.data, scaleSize])
 
     useEffect(() => {
@@ -72,7 +74,7 @@ const useRenderPdf = (canvas: fabric.Canvas, ctx: CanvasRenderingContext2D) => {
     }, [ctx, page, renderPdf])
 
     const forwardPage = () => {
-        if (page <= pdfData.data.length + 1) {
+        if (page <= pdfData.data.length) {
             setPage((pre) => pre + 1)
         }
     }
