@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from '@base/app/hooks'
 import { disableDropSideEffect, isProperFile } from '@base/utils/helper'
 import { bgColor, primaryColor } from '@base/utils/styles'
-import { UploadFile } from '@base/utils/types'
+import { PdfData, UploadFile } from '@base/utils/types'
 import Button from '@components/Button'
 import Loading from '@features/loading/Loading'
 import { setLoading } from '@features/loading/loadingSlice'
@@ -9,8 +9,9 @@ import React, { useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
 
-import { setPdfData, setPdfFile } from './pdfSlice'
-import uploadFile from './useUploadFile'
+import useCanvasSize from './hooks/useCanvasSize'
+import uploadFile from './hooks/useUploadFile'
+import { setPdfData } from './pdfSlice'
 
 const svgBg = bgColor.replace('#', '%23')
 
@@ -36,10 +37,9 @@ export default function UploadArea() {
     const navigate = useNavigate()
     const isLoading = useAppSelector((state) => state.loading.value.isLoading)
 
-    const uploadSuccess = useCallback(
-        () => (data: { type: UploadFile; data: string | Array<string> }, file: Uint8Array) => {
+    const uploadCallback = useCallback(
+        () => (data: PdfData) => {
             dispatch(setPdfData(data))
-            dispatch(setPdfFile(file))
             dispatch(setLoading(false))
             navigate('/step1')
         },
@@ -59,9 +59,9 @@ export default function UploadArea() {
                 alert(`the size of file ${file.name} is over 10MB, please use other one`)
                 return
             }
-            uploadFile(file, uploadSuccess)
+            uploadFile(file, uploadCallback)
         },
-        [dispatch, uploadSuccess],
+        [dispatch, uploadCallback],
     )
 
     function onFileChange(event: React.ChangeEvent) {

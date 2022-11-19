@@ -1,6 +1,6 @@
 import { useAppDispatch } from '@base/app/hooks'
 import { isPdf } from '@base/utils/helper'
-import { UploadFile, UploadPdfFunc } from '@base/utils/types'
+import { FormatSize, UploadFile, UploadPdfFunc } from '@base/utils/types'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 import { useState } from 'react'
 
@@ -61,6 +61,7 @@ const pdfToConvasUrl = (file: File, callback: UploadPdfFunc) => {
         const promises: unknown[] = []
         const dataList: Array<string> = []
         const pdfProxy = await loadingTask.promise
+        let pdfSize: FormatSize
         for (let pageNumber = 1; pageNumber <= pdfProxy.numPages; pageNumber += 1) {
             const canvasDemo = document.createElement('canvas')
             canvasdiv?.appendChild(canvasDemo)
@@ -71,6 +72,7 @@ const pdfToConvasUrl = (file: File, callback: UploadPdfFunc) => {
             // Prepare canvas using PDF page dimensions
             canvasDemo.height = viewport.height
             canvasDemo.width = viewport.width
+            pdfSize = { height: viewport.height, width: viewport.width }
             const context = canvasDemo.getContext('2d')
             // Render PDF page into canvas context
             const renderContext = {
@@ -87,13 +89,11 @@ const pdfToConvasUrl = (file: File, callback: UploadPdfFunc) => {
             )
         }
         Promise.all([...promises]).then(() => {
-            success(
-                {
-                    type: UploadFile.PDF,
-                    data: dataList,
-                },
-                pdfData,
-            )
+            success({
+                fileType: UploadFile.PDF,
+                data: dataList,
+                size: pdfSize,
+            })
         })
     }
     fileReader.readAsArrayBuffer(file)
