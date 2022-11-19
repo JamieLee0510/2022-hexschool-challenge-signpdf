@@ -25,7 +25,7 @@ export default function PreviewArea() {
     const [canvas, setCanvas] = useState<fabric.Canvas | null>(null)
     const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null)
     const size = useCanvasSize()
-    const [prev, next] = useRenderPdf(canvas!, ctx!)
+    const [prev, next] = useRenderPdf(canvas, ctx)
 
     useEffect(() => {
         const c = new fabric.Canvas(canvasRef.current)
