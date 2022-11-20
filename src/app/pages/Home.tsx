@@ -79,24 +79,6 @@ export default function Home() {
                         <ImageWrapper imgUrl={manImg} />
                     </ImageDiv>
                 </ImageDiv>
-
-                <button
-                    type='button'
-                    onClick={() => {
-                        // navigate('/step1')
-                        dispatch(setLoading(false))
-                    }}
-                >
-                    not loading
-                </button>
-                <button
-                    type='button'
-                    onClick={() => {
-                        dispatch(setLoading(true))
-                    }}
-                >
-                    loading
-                </button>
             </Container>
         </BasicLayout>
     )
