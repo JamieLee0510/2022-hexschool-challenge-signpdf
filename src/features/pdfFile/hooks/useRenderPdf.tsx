@@ -73,17 +73,19 @@ const useRenderPdf = (canvas: fabric.Canvas | null, ctx: CanvasRenderingContext2
         renderPdf()
     }, [ctx, page, renderPdf])
 
-    const forwardPage = () => {
+    const forwardPage = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
         if (page <= pdfData.data.length) {
             setPage((pre) => pre + 1)
         }
     }
-    const backwardPage = () => {
+    const backwardPage = (e: React.MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault()
         if (page > 1) {
             setPage((pre) => pre - 1)
         }
     }
 
-    return [backwardPage, forwardPage]
+    return [backwardPage, forwardPage, page, pdfData.data.length]
 }
 export default useRenderPdf

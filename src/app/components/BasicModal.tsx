@@ -1,6 +1,7 @@
 import CancelIcon from '@assets/cancel_icon.png'
 import { getMousePos, getTouchPos } from '@base/utils/helper'
-import React, { ReactNode, useEffect, useRef, useState } from 'react'
+import React, { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import CanvasDraw from 'react-canvas-draw'
 import ReactModal from 'react-modal'
 
 ReactModal.setAppElement('#root')
@@ -53,20 +54,24 @@ export default function BasicModal({
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
     const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
-    const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null)
+    const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
     const [src, setSrc] = useState<string | null>(null)
 
     const [drawing, setDrawing] = useState(false)
 
     useEffect(() => {
         const c = canvasRef.current
+        if (c == null) return
+
+        setCtx(c.getContext('2d')!)
         setCanvas(c)
-        if (c) setCtx(c.getContext('2d'))
-    }, [canvasRef]) /** 開始 */
+    }, [canvasRef])
+    /** 開始 */
     const handleTouchStart = (event: React.TouchEvent<HTMLCanvasElement>) => {
         console.log('hihi handleTouchStart')
         setDrawing(true)
         const touchPos = getTouchPos(canvas!, event)
+
         // ctx!.beginPath(touchPos.x, touchPos.y)
         ctx!.beginPath()
         ctx!.moveTo(touchPos.x, touchPos.y)
@@ -74,8 +79,11 @@ export default function BasicModal({
     }
 
     const handleMouseDown = (event: React.MouseEvent) => {
+        console.log('hihi handleMouseDown')
         setDrawing(true)
         const mousePos = getMousePos(canvas!, event)
+        console.log('mousePos:', mousePos)
+        console.log('ctx:', ctx)
         ctx!.beginPath()
         ctx!.moveTo(mousePos.x, mousePos.y)
         event.preventDefault()
@@ -127,6 +135,11 @@ export default function BasicModal({
         setSrc(image)
     }
 
+    const test = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault()
+        console.log('hihi')
+    }
+
     return (
         <ReactModal
             isOpen={isOpen}
@@ -152,24 +165,27 @@ export default function BasicModal({
                 />
             </div>
             {/* 測試區域  */}
-            {isOpen && (
-                <canvas
-                    style={{ background: '#EEE' }}
-                    ref={canvasRef}
-                    width={canvasSize}
-                    height={canvasSize}
-                    onTouchStart={handleTouchStart}
-                    onTouchMove={handleTouchMove}
-                    onTouchEnd={handleTouchEnd}
-                    onMouseDown={handleMouseDown}
-                    onMouseMove={handleMouseMove}
-                    onMouseUp={handleMouseUp}
-                />
-            )}
+
+            <canvas
+                style={{ background: '#EEE' }}
+                ref={canvasRef}
+                width={canvasSize}
+                height={canvasSize}
+                onTouchStart={handleTouchStart}
+                onTouchMove={handleTouchMove}
+                onTouchEnd={handleTouchEnd}
+                onMouseDown={handleMouseDown}
+                onMouseMove={handleMouseMove}
+                onMouseUp={handleMouseUp}
+            />
+            {/* <CanvasDraw /> */}
             {/* 測試區域結束 */}
             {children}
             <button type='button' onClick={handleCloseModal}>
                 Close Modal
+            </button>
+            <button type='button' onClick={test}>
+                test
             </button>
         </ReactModal>
     )
