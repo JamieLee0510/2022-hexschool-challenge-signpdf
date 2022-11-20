@@ -49,95 +49,18 @@ export default function BasicModal({
         }
     }, [closeModal, isOpen])
 
-    // create sign area
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const demoCanvasRef = useRef<any>(null)
 
-    const canvasRef = useRef<HTMLCanvasElement>(null)
-
-    const [canvas, setCanvas] = useState<HTMLCanvasElement | null>(null)
-    const [ctx, setCtx] = useState<CanvasRenderingContext2D>()
-    const [src, setSrc] = useState<string | null>(null)
-
-    const [drawing, setDrawing] = useState(false)
-
-    useEffect(() => {
-        const c = canvasRef.current
-        if (c == null) return
-
-        setCtx(c.getContext('2d')!)
-        setCanvas(c)
-    }, [canvasRef])
-    /** 開始 */
-    const handleTouchStart = (event: React.TouchEvent<HTMLCanvasElement>) => {
-        console.log('hihi handleTouchStart')
-        setDrawing(true)
-        const touchPos = getTouchPos(canvas!, event)
-
-        // ctx!.beginPath(touchPos.x, touchPos.y)
-        ctx!.beginPath()
-        ctx!.moveTo(touchPos.x, touchPos.y)
-        event.preventDefault()
+    const demoCanvas = () => {
+        console.log(demoCanvasRef.current!.getDataURL())
     }
-
-    const handleMouseDown = (event: React.MouseEvent) => {
-        console.log('hihi handleMouseDown')
-        setDrawing(true)
-        const mousePos = getMousePos(canvas!, event)
-        console.log('mousePos:', mousePos)
-        console.log('ctx:', ctx)
-        ctx!.beginPath()
-        ctx!.moveTo(mousePos.x, mousePos.y)
-        event.preventDefault()
-    }
-
-    /** 移動 */
-    const handleTouchMove = (event: React.TouchEvent) => {
-        console.log('hihi handleTouchMove')
-        if (!drawing) return
-        const touchPos = getTouchPos(canvas!, event)
-        ctx!.lineWidth = 2
-        ctx!.lineCap = 'round' // 繪制圓形的結束線帽
-        ctx!.lineJoin = 'round' // 兩條線條交匯時，建立圓形邊角
-        ctx!.shadowBlur = 1 // 邊緣模糊，防止直線邊緣出現鋸齒
-        ctx!.shadowColor = 'black' // 邊緣顏色
-        ctx!.lineTo(touchPos.x, touchPos.y)
-        ctx!.stroke()
-    }
-
-    const handleMouseMove = (event: React.MouseEvent) => {
-        if (!drawing) return
-        const mousePos = getMousePos(canvas!, event)
-        ctx!.lineWidth = 2
-        ctx!.lineCap = 'round' // 繪制圓形的結束線帽
-        ctx!.lineJoin = 'round' // 兩條線條交匯時，建立圓形邊角
-        ctx!.shadowBlur = 1 // 邊緣模糊，防止直線邊緣出現鋸齒
-        ctx!.shadowColor = 'black' // 邊緣顏色
-        ctx!.lineTo(mousePos.x, mousePos.y)
-        ctx!.stroke()
-    }
-
-    /** 結束 */
-    const handleTouchEnd = (event: React.TouchEvent) => {
-        setDrawing(false)
-    }
-
-    const handleMouseUp = (event: React.MouseEvent) => {
-        setDrawing(false)
-    }
-
-    /** 清除 */
-    const handleClear = () => {
-        ctx!.clearRect(0, 0, canvas!.width, canvas!.height)
-    }
-
-    /** 轉圖片 */
-    const handleConvertToImage = () => {
-        const image = canvas!.toDataURL()
-        setSrc(image)
-    }
-
-    const test = (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault()
-        console.log('hihi')
+    const demoCanvasProps = {
+        color: '#ffc600',
+        width: 400,
+        height: 400,
+        brushRadius: 10,
+        lazyRadius: 12,
     }
 
     return (
@@ -164,27 +87,23 @@ export default function BasicModal({
                     style={{ height: '100%', width: '100%' }}
                 />
             </div>
-            {/* 測試區域  */}
 
-            <canvas
-                style={{ background: '#EEE' }}
-                ref={canvasRef}
-                width={canvasSize}
-                height={canvasSize}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-                onMouseDown={handleMouseDown}
-                onMouseMove={handleMouseMove}
-                onMouseUp={handleMouseUp}
+            <CanvasDraw
+                ref={(canvasDraw) => {
+                    demoCanvasRef.current = canvasDraw
+                }}
+                brushColor={demoCanvasProps.color}
+                brushRadius={demoCanvasProps.brushRadius}
+                lazyRadius={demoCanvasProps.lazyRadius}
+                canvasWidth={demoCanvasProps.width}
+                canvasHeight={demoCanvasProps.height}
             />
-            {/* <CanvasDraw /> */}
             {/* 測試區域結束 */}
             {children}
             <button type='button' onClick={handleCloseModal}>
                 Close Modal
             </button>
-            <button type='button' onClick={test}>
+            <button type='button' onClick={demoCanvas}>
                 test
             </button>
         </ReactModal>

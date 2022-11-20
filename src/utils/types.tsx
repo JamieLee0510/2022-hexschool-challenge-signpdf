@@ -3,6 +3,9 @@ import React, { ReactNode } from 'react'
 
 export type PureChildrenProps = { children: ReactNode }
 
+export type MainCanvas = fabric.Canvas | null
+export type SetMainCanvas = React.Dispatch<React.SetStateAction<fabric.Canvas | null>>
+
 export enum Step {
     one = 1,
     two = 2,
