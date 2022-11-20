@@ -3,3 +3,4 @@ jest.config.js
 craco.config.js
 fileMock.js
 styleMock.js
+react-modal.js
