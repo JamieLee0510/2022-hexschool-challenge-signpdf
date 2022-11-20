@@ -8,6 +8,7 @@ export interface BtnStyleProps {
     width?: string
     height?: string
     fontSize?: string
+    btnColor?: string
 }
 
 export interface ImgStyleProps {
@@ -28,4 +29,8 @@ export interface DotStyleProps {
     left?: number | string
     right?: number | string
     bottom?: number | string
+}
+
+export interface LineStyleProps {
+    color: string
 }

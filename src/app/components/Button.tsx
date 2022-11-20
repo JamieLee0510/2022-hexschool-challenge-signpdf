@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 const BtnStyle = styled.button<BtnStyleProps>`
-    background-color: ${primaryColor};
+    background-color: ${(props) => (props.btnColor ? props.btnColor : primaryColor)};
     width: ${(props) => (props.width ? props.width : '100px')};
     height: ${(props) => (props.height ? props.height : '40px')};
     border: solid white;
@@ -12,12 +12,22 @@ const BtnStyle = styled.button<BtnStyleProps>`
     color: white;
 `
 
-export default function Button({ text, callBack }: { text: string; callBack: () => void }) {
+export default function Button({
+    text,
+    callBack,
+    btnColor,
+}: {
+    text: string
+    callBack: () => void
+    // eslint-disable-next-line react/require-default-props
+    btnColor?: string
+}) {
     return (
         <BtnStyle
             onClick={() => {
                 callBack()
             }}
+            btnColor={btnColor}
         >
             {text}
         </BtnStyle>

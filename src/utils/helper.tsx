@@ -12,3 +12,20 @@ export const isProperFile = (filetype: string) => {
     }
     return false
 }
+
+export const getMousePos = (canvas: HTMLCanvasElement, evt: React.MouseEvent) => {
+    const rect = canvas.getBoundingClientRect()
+    console.log('evt.clientX:', evt.clientX)
+    console.log('rect.left:', rect.left)
+    return {
+        x: evt.clientX - rect.left,
+        y: evt.clientY - rect.top,
+    }
+}
+export const getTouchPos = (canvas: Element, evt: React.TouchEvent) => {
+    const rect = canvas.getBoundingClientRect()
+    return {
+        x: evt.touches[0].clientX - rect.left,
+        y: evt.touches[0].clientY - rect.top,
+    }
+}
