@@ -1,16 +1,14 @@
 import loadingReducer from '@features/loading/loadingSlice'
 import pdfReducer from '@features/pdfFile/pdfSlice'
-import { Action, configureStore, getDefaultMiddleware, ThunkAction } from '@reduxjs/toolkit'
-
-const customizedMiddleware = getDefaultMiddleware({
-    serializableCheck: false,
-})
+import signReducer from '@features/signData/signSlice'
+import { Action, configureStore, ThunkAction } from '@reduxjs/toolkit'
 
 export const configureSelfStore = (selfInitState = {}) => {
     const store = configureStore({
         reducer: {
             pdf: pdfReducer,
             loading: loadingReducer,
+            sign: signReducer,
         },
         preloadedState: selfInitState,
         // eslint-disable-next-line @typescript-eslint/no-shadow

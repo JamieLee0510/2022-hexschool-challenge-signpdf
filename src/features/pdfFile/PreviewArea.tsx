@@ -1,5 +1,6 @@
 import { useAppSelector } from '@base/app/hooks'
 import { mockPdf } from '@base/utils/mock/pdfData'
+import { MainCanvas, SetMainCanvas } from '@base/utils/types'
 import { fabric } from 'fabric'
 import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
@@ -39,25 +40,30 @@ const pageBtnStyles = {
     color: 'white',
 }
 
-export default function PreviewArea() {
+export default function PreviewArea({
+    mainCanvas,
+    setMainCanvas,
+}: {
+    mainCanvas: MainCanvas
+    setMainCanvas: SetMainCanvas
+}) {
     const canvasRef = useRef<HTMLCanvasElement>(null)
 
-    const [canvas, setCanvas] = useState<fabric.Canvas | null>(null)
     const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null)
     const size = useCanvasSize()
-    const [prev, next, currentPage, totalPage] = useRenderPdf(canvas, ctx)
+    const [prev, next, currentPage, totalPage] = useRenderPdf(mainCanvas, ctx)
 
     useLayoutEffect(() => {
         const c = new fabric.Canvas(canvasRef.current)
         if (size.height <= 1000 && size.width <= 1000) {
             c.setHeight(size.height)
             c.setWidth(size.width)
-            setCanvas(c)
+            setMainCanvas(c)
         }
-    }, [canvasRef, size.height, size.width])
+    }, [canvasRef, setMainCanvas, size.height, size.width])
 
     const test = () => {
-        const dataURL = canvas!.toDataURL()
+        const dataURL = mainCanvas!.toDataURL()
         const link = document.createElement('a')
         link.download = 'my-image.png'
         link.href = dataURL

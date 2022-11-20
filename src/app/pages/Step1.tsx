@@ -1,7 +1,9 @@
+import SignModal from '@base/features/signData/components/SignModal'
 import { getMousePos, getTouchPos } from '@base/utils/helper'
 import { FuncBarOptions, Step } from '@base/utils/types'
 import ReactModal from '@components/BasicModal'
 import PreviewArea from '@features/pdfFile/PreviewArea'
+import { fabric } from 'fabric'
 import React, { useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 
@@ -14,6 +16,7 @@ import { useAppSelector } from '../hooks'
 const canvasSize = 500
 
 export default function Step1() {
+    const [mainCanvas, setMainCanvas] = useState<fabric.Canvas | null>(null)
     const step1FuncBar = {
         pen: () => {
             alert(`請先確認是否使用${fileName}文件進行操作`)
@@ -42,7 +45,7 @@ export default function Step1() {
     }
     const step2FuncBar = {
         pen: () => {
-            alert(`請先確認是否使用${fileName}文件進行操作`)
+            setShowModal(true)
         },
         text: () => {
             alert(`請先確認是否使用${fileName}文件進行操作`)
@@ -60,7 +63,7 @@ export default function Step1() {
             },
         },
         btn2: {
-            text: '確認',
+            text: '下一步',
             func: () => {
                 setStep(Step.two)
             },
@@ -85,26 +88,29 @@ export default function Step1() {
         setShowModal(false)
     }
 
+    const addSignature = (imgData: string) => {
+        fabric.Image.fromURL(imgData, (img) => {
+            img.scaleToWidth(100)
+            img.scaleToHeight(100)
+            mainCanvas!.add(img).renderAll()
+        })
+    }
+
     return (
         <BasicLayout>
             {step !== Step.three && <FunctionBar step={step} funcBarOptions={stepFuncBar} />}
             <ProgressLine step={step} />
-            <PreviewArea />
-            <button
-                type='button'
-                onClick={() => {
-                    setShowModal(true)
-                }}
-            >
-                test modal
-            </button>
-            <ReactModal
+            <PreviewArea mainCanvas={mainCanvas} setMainCanvas={setMainCanvas} />
+
+            <SignModal
                 isOpen={showModal}
                 closeModal={handleCloseModal}
-                handleCloseModal={handleCloseModal}
+                mainCanvas={mainCanvas}
+                setMainCanvas={setMainCanvas}
+                addSignOnCanvas={addSignature}
             >
                 <div style={{ width: '100%', textAlign: 'center' }}>Modal text!</div>
-            </ReactModal>
+            </SignModal>
         </BasicLayout>
     )
 }
