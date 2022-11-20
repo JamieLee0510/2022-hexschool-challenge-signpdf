@@ -89,6 +89,7 @@ export default function Step1() {
     }
 
     const addSignature = (imgData: string) => {
+        console.log('image data-url:', imgData)
         fabric.Image.fromURL(imgData, (img) => {
             img.scaleToWidth(100)
             img.scaleToHeight(100)
