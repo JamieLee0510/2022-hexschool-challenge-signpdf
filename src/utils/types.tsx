@@ -1,4 +1,5 @@
 import { PdfState } from '@features/pdfFile/pdfSlice'
+import { PDFPageProxy } from 'pdfjs-dist'
 import React, { ReactNode } from 'react'
 
 export type PureChildrenProps = { children: ReactNode }
@@ -48,4 +49,9 @@ export type FuncBarOptions = {
     checked: ModifyFunction
     btn1: BtnProps
     btn2: BtnProps
+}
+
+export type OriginPdf = {
+    fileName: string
+    data: Array<PDFPageProxy>
 }
