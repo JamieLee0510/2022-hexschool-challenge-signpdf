@@ -18,6 +18,7 @@
         "@types/react-modal": "^3.13.1",
         "@types/react-pdf": "^5.7.4",
         "@types/styled-components": "^5.1.26",
+        "buffer": "^6.0.3",
         "fabric": "^5.2.4",
         "history": "^5.3.0",
         "npm": "^9.1.2",

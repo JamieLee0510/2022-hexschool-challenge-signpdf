@@ -2,16 +2,13 @@ import { useAppDispatch, useAppSelector } from '@base/app/hooks'
 import { disableDropSideEffect, isProperFile } from '@base/utils/helper'
 import { bgColor, primaryColor } from '@base/utils/styles'
 import { PdfData, UploadFile } from '@base/utils/types'
-import Button from '@components/Button'
 import Loading from '@features/loading/Loading'
 import { setLoading } from '@features/loading/loadingSlice'
+import { getViewportSize, readPdf, turnPdfToCanvasUrl } from '@features/pdfFile/hooks/useUploadFile'
+import { setPdfData } from '@features/pdfFile/pdfSlice'
 import React, { useCallback, useEffect, useRef } from 'react'
 import { useNavigate } from 'react-router'
 import styled from 'styled-components'
-
-import useCanvasSize from './hooks/useCanvasSize'
-import uploadFile from './hooks/useUploadFile'
-import { setPdfData } from './pdfSlice'
 
 const svgBg = bgColor.replace('#', '%23')
 
@@ -59,9 +56,29 @@ export default function UploadArea() {
                 alert(`the size of file ${file.name} is over 10MB, please use other one`)
                 return
             }
-            uploadFile(file, uploadCallback)
+            readPdf(file).then(async (data) => {
+                const pdfUrlArr: Array<string> = []
+                const size = getViewportSize(data.data[0])
+                for (let i = 0; i < data.data.length; i += 1) {
+                    // eslint-disable-next-line no-await-in-loop
+                    const pdfDataUrl = await turnPdfToCanvasUrl(data.data[i])
+                    pdfUrlArr.push(pdfDataUrl)
+                }
+
+                dispatch(
+                    setPdfData({
+                        name: data.fileName,
+                        size: size.size,
+                        data: pdfUrlArr,
+                        fileType: UploadFile.PDF,
+                    }),
+                )
+                dispatch(setLoading(false))
+                navigate('/step1')
+            })
+            // uploadFile(file, uploadCallback)
         },
-        [dispatch, uploadCallback],
+        [dispatch, navigate],
     )
 
     function onFileChange(event: React.ChangeEvent) {
