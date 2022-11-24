@@ -78,7 +78,7 @@ export default function SignPage() {
         } else {
             setStepFuncBar(step1FuncBar)
         }
-    }, [step, step1FuncBar, step2FuncBar])
+    }, [step])
 
     // init render state
     const initRender = useRef(true)
