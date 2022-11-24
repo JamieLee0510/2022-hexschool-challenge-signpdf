@@ -1,5 +1,6 @@
+import { scaleAndPositionImage } from '@base/features/pdfFile/hooks/useRenderPdf'
 import SignModal from '@base/features/signData/components/SignModal'
-import { getMousePos, getTouchPos } from '@base/utils/helper'
+import customFabricDeleteIcon, { getMousePos, getTouchPos } from '@base/utils/helper'
 import { FuncBarOptions, Step } from '@base/utils/types'
 import ReactModal from '@components/BasicModal'
 import PreviewArea from '@features/pdfFile/PreviewArea'
@@ -11,9 +12,8 @@ import BasicLayout from '../components/layouts/BasicLayout'
 import FunctionBar from '../components/layouts/FunctionBar'
 import StepLayout from '../components/layouts/StepLayout'
 import ProgressLine from '../components/ProgressLine'
+import ConvasContext from '../contexts/CanvasContext'
 import { useAppSelector } from '../hooks'
-
-const canvasSize = 500
 
 export default function Step1() {
     const [mainCanvas, setMainCanvas] = useState<fabric.Canvas | null>(null)
@@ -87,31 +87,69 @@ export default function Step1() {
     const handleCloseModal = () => {
         setShowModal(false)
     }
+    const scaleSize = useAppSelector((state) => ({
+        height: state.pdf.value.size.height * state.pdf.scale,
+        width: state.pdf.value.size.width * state.pdf.scale,
+    }))
 
+    const demoSign = useAppSelector((state) => state.sign.value[0])
     const addSignature = (imgData: string) => {
-        console.log('image data-url:', imgData)
         fabric.Image.fromURL(imgData, (img) => {
             img.scaleToWidth(100)
             img.scaleToHeight(100)
-            mainCanvas!.add(img).renderAll()
+            fabricCanvas.current!.add(img).renderAll()
         })
     }
 
+    const renderBackground = (pdfData: string) => {
+        fabric.Image.fromURL(pdfData, (img) => {
+            scaleAndPositionImage(fabricCanvas.current!, img, scaleSize)
+        })
+    }
+
+    // init render state
+    const initRender = useRef(true)
+    // variables between re-render
+    const fabricCanvas = useRef<fabric.Canvas | null>(null)
+    useEffect(() => {
+        if (initRender.current) {
+            fabricCanvas.current = new fabric.Canvas('file-canvas')
+            customFabricDeleteIcon()
+            console.log('fabricCanvas.current:', fabricCanvas.current)
+        }
+
+        return () => {
+            initRender.current = false
+        }
+    }, [])
+
     return (
         <BasicLayout>
-            {step !== Step.three && <FunctionBar step={step} funcBarOptions={stepFuncBar} />}
-            <ProgressLine step={step} />
-            <PreviewArea mainCanvas={mainCanvas} setMainCanvas={setMainCanvas} />
+            <ConvasContext.Provider value={fabricCanvas.current}>
+                {step !== Step.three && <FunctionBar step={step} funcBarOptions={stepFuncBar} />}
+                <button
+                    type='button'
+                    onClick={() => {
+                        addSignature(demoSign)
+                    }}
+                >
+                    test
+                </button>
+                <ProgressLine step={step} />
+                <PreviewArea renderCallback={renderBackground}>
+                    <canvas id='file-canvas' />
+                </PreviewArea>
 
-            <SignModal
-                isOpen={showModal}
-                closeModal={handleCloseModal}
-                mainCanvas={mainCanvas}
-                setMainCanvas={setMainCanvas}
-                addSignOnCanvas={addSignature}
-            >
-                <div style={{ width: '100%', textAlign: 'center' }}>Modal text!</div>
-            </SignModal>
+                <SignModal
+                    isOpen={showModal}
+                    closeModal={handleCloseModal}
+                    mainCanvas={mainCanvas}
+                    setMainCanvas={setMainCanvas}
+                    addSignOnCanvas={addSignature}
+                >
+                    <div style={{ width: '100%', textAlign: 'center' }}>Modal text!</div>
+                </SignModal>
+            </ConvasContext.Provider>
         </BasicLayout>
     )
 }

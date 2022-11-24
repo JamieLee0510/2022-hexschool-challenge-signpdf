@@ -85,15 +85,6 @@ export default function SignModal({
         }
     }, [signatureList.length])
 
-    // const addSignOnCanvas = (index: number) => {
-    //     const imgData = signatureList[index]
-    //     fabric.Image.fromURL(imgData, (img) => {
-    //         img.scaleToWidth(100)
-    //         img.scaleToHeight(100)
-    //         mainCanvas!.add(img).renderAll()
-    //     })
-    // }
-
     return (
         <ReactModal
             isOpen={isOpen}

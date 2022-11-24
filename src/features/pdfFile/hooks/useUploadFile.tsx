@@ -1,11 +1,10 @@
 import { useAppDispatch } from '@base/app/hooks'
 import { isPdf } from '@base/utils/helper'
 import { FormatSize, OriginPdf, UploadFile, UploadPdfFunc } from '@base/utils/types'
+import { Buffer } from 'buffer'
 import { PageViewport, PDFPageProxy } from 'pdfjs-dist'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
 import { useState } from 'react'
-
-pdfjs.GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.js`
 
 // const pdfToConvasUrl = (file: File, callback: UploadPdfFunc) => {
 //     const fileReader = new FileReader()
@@ -136,11 +135,13 @@ export function readPdf(file: File) {
             }
 
             // slice data to array by page
-            for (let i = 1; i <= totalPage; i += 1) {
+            for (let i = 1; i <= totalPage; i++) {
                 // eslint-disable-next-line no-await-in-loop
                 const pageData = await pdfDoc.getPage(i)
+                console.log('pageData:', i)
                 pdfFile.data.push(pageData)
             }
+
             resolve(pdfFile)
         }
         reader.readAsDataURL(file)
@@ -159,7 +160,7 @@ export function getViewportSize(pageProxy: PDFPageProxy): {
 export async function turnPdfToCanvasUrl(pageProxy: PDFPageProxy): Promise<string> {
     const canvasdiv = document.getElementById('canvas-div')
     const canvasDemo = document.createElement('canvas')
-    canvasdiv?.appendChild(canvasDemo)
+    canvasdiv!.appendChild(canvasDemo)
     const customViewport = getViewportSize(pageProxy)
     canvasDemo.height = customViewport.size.height
     canvasDemo.width = customViewport.size.width
