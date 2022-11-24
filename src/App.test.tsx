@@ -1,4 +1,4 @@
-import Step1 from '@pages/Step1'
+import Step1 from '@base/app/pages/SignPage'
 import userEvent from '@testing-library/user-event'
 import { render, screen, waitFor } from '@utils/test-utils'
 import React from 'react'

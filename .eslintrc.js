@@ -112,6 +112,19 @@ module.exports = {
                 png: 'always',
             },
         ],
+        'jsx-a11y/no-noninteractive-element-interactions': [
+            2,
+            {
+                handlers: [
+                    'onClick',
+                    'onMouseDown',
+                    'onMouseUp',
+                    'onKeyPress',
+                    'onKeyDown',
+                    'onKeyUp',
+                ],
+            },
+        ],
 
         // single export的規則，0== 也沒差
         'import/prefer-default-export': 0,

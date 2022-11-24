@@ -50,45 +50,22 @@ const pageBtnStyles = {
     color: 'white',
 }
 
-export default function PreviewArea({
-    children,
+export default function PreviewArea({ children }: { children: ReactNode }) {
+    const [prev, next, currentPage, totalPage] = useRenderPdf()
 
-    renderCallback,
-}: {
-    children: ReactNode
-
-    renderCallback: (args: string) => void
-}) {
-    const mainCanvas = useContext(CanvasContext)
-    // const canvasRef = useRef<HTMLCanvasElement>(null)
-
-    const size = useCanvasSize()
-    const [prev, next, currentPage, totalPage] = useRenderPdf(renderCallback)
-
-    // useEffect(() => {
-    //     //  const c = new fabric.Canvas(canvasRef.current)
-    //     if (demoCanvas !== null) {
-    //         if (size.height <= 1000 && size.width <= 1000) {
-    //             demoCanvas.setHeight(size.height)
-    //             demoCanvas.setWidth(size.width)
-    //         }
-    //     }
-    // }, [demoCanvas, size.height, size.width])
-
-    const test = () => {
-        const dataURL = mainCanvas!.toDataURL()
-        const link = document.createElement('a')
-        link.download = 'my-image.png'
-        link.href = dataURL
-        link.target = '_blank'
-        document.body.appendChild(link)
-        link.click()
-        link.parentNode!.removeChild(link)
-    }
+    // const testDownload = () => {
+    //     const dataURL = mainCanvas!.toDataURL()
+    //     const link = document.createElement('a')
+    //     link.download = 'my-image.png'
+    //     link.href = dataURL
+    //     link.target = '_blank'
+    //     document.body.appendChild(link)
+    //     link.click()
+    //     link.parentNode!.removeChild(link)
+    // }
 
     return (
         <Container>
-            {/* <canvas ref={canvasRef} /> */}
             {children}
             <PdfPageBtnContainer>
                 <div>

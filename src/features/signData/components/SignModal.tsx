@@ -1,17 +1,17 @@
 import CancelIcon from '@assets/cancel_icon.png'
 import Button from '@base/app/components/Button'
+import CanvasContext from '@base/app/contexts/CanvasContext'
 import { useAppDispatch, useAppSelector } from '@base/app/hooks'
 import { getMousePos, getTouchPos } from '@base/utils/helper'
 import { MainCanvas, SetMainCanvas } from '@base/utils/types'
 import { fabric } from 'fabric'
-import React, { ReactNode, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, { ReactNode, useContext, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import CanvasDraw from 'react-canvas-draw'
 import ReactModal from 'react-modal'
 
 import { addSignData, removeSignData } from '../signSlice'
 
 ReactModal.setAppElement('#root')
-const canvasSize = 500
 const modalStyles = {
     content: {
         top: '50%',
@@ -30,45 +30,27 @@ const modalStyles = {
         backgroundColor: 'rgba(0, 0, 0, 0.75)',
     },
 }
+
+const canvasProps = {
+    color: 'black',
+    width: 500,
+    height: 150,
+    brushRadius: 5,
+    lazyRadius: 8,
+}
 export default function SignModal({
     children,
     isOpen,
     closeModal,
-    mainCanvas,
-    setMainCanvas,
-    addSignOnCanvas,
 }: {
     children: ReactNode
     isOpen: boolean
     closeModal: () => void
-    mainCanvas: MainCanvas
-    setMainCanvas: SetMainCanvas
-    addSignOnCanvas: (imgData: string) => void
 }) {
-    const cancelBtn = useRef<HTMLImageElement>(null)
     const dispatch = useAppDispatch()
-    useEffect(() => {
-        setTimeout(() => {
-            cancelBtn.current!.addEventListener('click', closeModal)
-        }, 0)
-
-        return () => {
-            setTimeout(() => {
-                cancelBtn.current!.removeEventListener('click', closeModal)
-            }, 0)
-        }
-    }, [closeModal, isOpen])
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const canvasRef = useRef<any>(null)
-
-    const demoCanvasProps = {
-        color: 'black',
-        width: 500,
-        height: 150,
-        brushRadius: 5,
-        lazyRadius: 8,
-    }
 
     const saveSignature = () => {
         const signatureDataUrl = canvasRef.current!.getDataURL()
@@ -84,6 +66,16 @@ export default function SignModal({
             setSign(true)
         }
     }, [signatureList.length])
+
+    const fabricCanvas = useContext(CanvasContext)
+
+    const addSignature = (imgData: string) => {
+        fabric.Image.fromURL(imgData, (img) => {
+            img.scaleToWidth(100)
+            img.scaleToHeight(100)
+            fabricCanvas?.add(img).renderAll()
+        })
+    }
 
     return (
         <ReactModal
@@ -103,10 +95,11 @@ export default function SignModal({
                 }}
             >
                 <img
-                    ref={cancelBtn}
                     src={CancelIcon}
                     alt='cancel'
                     style={{ height: '100%', width: '100%' }}
+                    onClick={closeModal}
+                    aria-hidden='true'
                 />
             </div>
 
@@ -117,11 +110,11 @@ export default function SignModal({
                             ref={(canvasDraw) => {
                                 canvasRef.current = canvasDraw
                             }}
-                            brushColor={demoCanvasProps.color}
-                            brushRadius={demoCanvasProps.brushRadius}
-                            lazyRadius={demoCanvasProps.lazyRadius}
-                            canvasWidth={demoCanvasProps.width}
-                            canvasHeight={demoCanvasProps.height}
+                            brushColor={canvasProps.color}
+                            brushRadius={canvasProps.brushRadius}
+                            lazyRadius={canvasProps.lazyRadius}
+                            canvasWidth={canvasProps.width}
+                            canvasHeight={canvasProps.height}
                         />
                     </div>
                     {/* {children} */}
@@ -139,7 +132,7 @@ export default function SignModal({
                         <button
                             type='button'
                             onClick={() => {
-                                addSignOnCanvas(signDataUrl)
+                                addSignature(signDataUrl)
                                 closeModal()
                             }}
                         >
