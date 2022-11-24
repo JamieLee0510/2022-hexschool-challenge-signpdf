@@ -59,7 +59,8 @@ export default function UploadArea() {
             readPdf(file).then(async (data) => {
                 const pdfUrlArr: Array<string> = []
                 const size = getViewportSize(data.data[0])
-                for (let i = 0; i < data.data.length; i += 1) {
+
+                for (let i = 0; i <= data.data.length - 1; i++) {
                     // eslint-disable-next-line no-await-in-loop
                     const pdfDataUrl = await turnPdfToCanvasUrl(data.data[i])
                     pdfUrlArr.push(pdfDataUrl)

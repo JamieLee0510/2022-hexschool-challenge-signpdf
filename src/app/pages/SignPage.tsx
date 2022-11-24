@@ -1,22 +1,18 @@
 import SignModal from '@base/features/signData/components/SignModal'
-import { getMousePos, getTouchPos } from '@base/utils/helper'
+import customFabricDeleteIcon from '@base/utils/helper'
 import { FuncBarOptions, Step } from '@base/utils/types'
-import ReactModal from '@components/BasicModal'
 import PreviewArea from '@features/pdfFile/PreviewArea'
 import { fabric } from 'fabric'
 import React, { useEffect, useRef, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router'
+import { useNavigate } from 'react-router'
 
 import BasicLayout from '../components/layouts/BasicLayout'
 import FunctionBar from '../components/layouts/FunctionBar'
-import StepLayout from '../components/layouts/StepLayout'
 import ProgressLine from '../components/ProgressLine'
+import ConvasContext from '../contexts/CanvasContext'
 import { useAppSelector } from '../hooks'
 
-const canvasSize = 500
-
-export default function Step1() {
-    const [mainCanvas, setMainCanvas] = useState<fabric.Canvas | null>(null)
+export default function SignPage() {
     const step1FuncBar = {
         pen: () => {
             alert(`請先確認是否使用${fileName}文件進行操作`)
@@ -82,36 +78,40 @@ export default function Step1() {
         } else {
             setStepFuncBar(step1FuncBar)
         }
-    }, [step])
+    }, [step, step1FuncBar, step2FuncBar])
 
-    const handleCloseModal = () => {
-        setShowModal(false)
-    }
-
-    const addSignature = (imgData: string) => {
-        console.log('image data-url:', imgData)
-        fabric.Image.fromURL(imgData, (img) => {
-            img.scaleToWidth(100)
-            img.scaleToHeight(100)
-            mainCanvas!.add(img).renderAll()
-        })
-    }
+    // init render state
+    const initRender = useRef(true)
+    // variables between re-render
+    const [fabricCanvas, setFabricCanvas] = useState<fabric.Canvas | null>(null)
+    useEffect(() => {
+        if (initRender.current) {
+            setFabricCanvas(new fabric.Canvas('file-canvas'))
+            customFabricDeleteIcon()
+        }
+        return () => {
+            initRender.current = false
+        }
+    }, [])
 
     return (
         <BasicLayout>
-            {step !== Step.three && <FunctionBar step={step} funcBarOptions={stepFuncBar} />}
-            <ProgressLine step={step} />
-            <PreviewArea mainCanvas={mainCanvas} setMainCanvas={setMainCanvas} />
+            <ConvasContext.Provider value={fabricCanvas}>
+                {step !== Step.three && <FunctionBar step={step} funcBarOptions={stepFuncBar} />}
+                <ProgressLine step={step} />
+                <PreviewArea>
+                    <canvas id='file-canvas' />
+                </PreviewArea>
 
-            <SignModal
-                isOpen={showModal}
-                closeModal={handleCloseModal}
-                mainCanvas={mainCanvas}
-                setMainCanvas={setMainCanvas}
-                addSignOnCanvas={addSignature}
-            >
-                <div style={{ width: '100%', textAlign: 'center' }}>Modal text!</div>
-            </SignModal>
+                <SignModal
+                    isOpen={showModal}
+                    closeModal={() => {
+                        setShowModal(false)
+                    }}
+                >
+                    <div style={{ width: '100%', textAlign: 'center' }}>Modal text!</div>
+                </SignModal>
+            </ConvasContext.Provider>
         </BasicLayout>
     )
 }

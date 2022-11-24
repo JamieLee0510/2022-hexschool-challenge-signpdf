@@ -2,7 +2,7 @@ import React from 'react'
 import { createBrowserRouter } from 'react-router-dom'
 
 import Home from './Home'
-import Step1 from './Step1'
+import Step1 from './SignPage'
 
 const router = createBrowserRouter([
     {

@@ -1,10 +1,9 @@
+import CanvasContext from '@base/app/contexts/CanvasContext'
 import { useAppDispatch, useAppSelector } from '@base/app/hooks'
 import { FormatSize } from '@base/utils/types'
 import { fabric } from 'fabric'
 import * as pdfjs from 'pdfjs-dist/build/pdf'
-import React, { useCallback, useEffect, useState } from 'react'
-
-import useCanvasSize from './useCanvasSize'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 
 export const canvasOriginalHeight = 800
 export const canvasOriginalWidth = 530
@@ -53,7 +52,9 @@ export const scaleAndPositionImage = (
     })
 }
 
-const useRenderPdf = (canvas: fabric.Canvas | null, ctx: CanvasRenderingContext2D | null) => {
+const useRenderPdf = () => {
+    const mainCanvas = useContext(CanvasContext)
+
     const pdfData = useAppSelector((state) => state.pdf.value)
     const scaleSize = useAppSelector((state) => ({
         height: state.pdf.value.size.height * state.pdf.scale,
@@ -61,21 +62,24 @@ const useRenderPdf = (canvas: fabric.Canvas | null, ctx: CanvasRenderingContext2
     }))
     const [page, setPage] = useState(1)
 
-    const renderPdf = useCallback(() => {
-        if (canvas !== null) {
-            fabric.Image.fromURL(pdfData.data[page - 1], (img) => {
-                scaleAndPositionImage(canvas, img, scaleSize)
-            })
-        }
-    }, [canvas, page, pdfData.data, scaleSize])
+    const renderPdf = useCallback(
+        (pageNum: number) => {
+            if (mainCanvas !== null) {
+                fabric.Image.fromURL(pdfData.data[pageNum - 1], (img) => {
+                    scaleAndPositionImage(mainCanvas, img, scaleSize)
+                })
+            }
+        },
+        [mainCanvas, pdfData.data, scaleSize],
+    )
 
     useEffect(() => {
-        renderPdf()
-    }, [ctx, page, renderPdf])
+        renderPdf(page)
+    }, [page, renderPdf])
 
     const forwardPage = (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault()
-        if (page <= pdfData.data.length) {
+        if (page <= pdfData.data.length - 1) {
             setPage((pre) => pre + 1)
         }
     }

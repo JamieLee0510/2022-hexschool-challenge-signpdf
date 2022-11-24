@@ -112,6 +112,19 @@ module.exports = {
                 png: 'always',
             },
         ],
+        'jsx-a11y/no-noninteractive-element-interactions': [
+            2,
+            {
+                handlers: [
+                    'onClick',
+                    'onMouseDown',
+                    'onMouseUp',
+                    'onKeyPress',
+                    'onKeyDown',
+                    'onKeyUp',
+                ],
+            },
+        ],
 
         // single export的規則，0== 也沒差
         'import/prefer-default-export': 0,
@@ -164,6 +177,7 @@ module.exports = {
         // 提醒不要修改參數的入參，但由於state就是要修改的（如vuex、redux）
         // 所以就用白名單的方式l來修改
         'no-param-reassign': ['error', { props: true, ignorePropertyModificationsFor: ['state'] }],
+        'no-plusplus': ['error', { allowForLoopAfterthoughts: true }],
     },
     // 解析專案中的.js .jsx .ts .tsx
     settings: {

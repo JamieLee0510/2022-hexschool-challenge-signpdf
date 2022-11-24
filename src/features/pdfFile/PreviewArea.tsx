@@ -1,8 +1,17 @@
+import CanvasContext from '@base/app/contexts/CanvasContext'
 import { useAppSelector } from '@base/app/hooks'
 import { mockPdf } from '@base/utils/mock/pdfData'
 import { MainCanvas, SetMainCanvas } from '@base/utils/types'
 import { fabric } from 'fabric'
-import React, { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import React, {
+    ReactNode,
+    useCallback,
+    useContext,
+    useEffect,
+    useLayoutEffect,
+    useRef,
+    useState,
+} from 'react'
 import styled from 'styled-components'
 
 import useCanvasSize from './hooks/useCanvasSize'
@@ -22,7 +31,7 @@ const Container = styled.div`
 
 const PdfPageBtnContainer = styled.div`
     position: absolute;
-    bottom: 5%;
+    bottom: 1%;
     width: 200px;
     height: 40px;
     background-color: rgba(183, 183, 183, 0.24);
@@ -30,6 +39,7 @@ const PdfPageBtnContainer = styled.div`
     display: flex;
     justify-content: space-around;
     align-items: center;
+    z-index: 5;
 `
 const pageBtnStyles = {
     backgroundColor: '#6C6C6C',
@@ -40,45 +50,23 @@ const pageBtnStyles = {
     color: 'white',
 }
 
-export default function PreviewArea({
-    mainCanvas,
-    setMainCanvas,
-}: {
-    mainCanvas: MainCanvas
-    setMainCanvas: SetMainCanvas
-}) {
-    const canvasRef = useRef<HTMLCanvasElement>(null)
+export default function PreviewArea({ children }: { children: ReactNode }) {
+    const [prev, next, currentPage, totalPage] = useRenderPdf()
 
-    const [ctx, setCtx] = useState<CanvasRenderingContext2D | null>(null)
-    const size = useCanvasSize()
-    const [prev, next, currentPage, totalPage] = useRenderPdf(mainCanvas, ctx)
-
-    useLayoutEffect(() => {
-        const c = new fabric.Canvas(canvasRef.current)
-        if (size.height <= 1000 && size.width <= 1000) {
-            c.setHeight(size.height)
-            c.setWidth(size.width)
-            setMainCanvas(c)
-        }
-    }, [canvasRef, setMainCanvas, size.height, size.width])
-
-    const test = () => {
-        const dataURL = mainCanvas!.toDataURL()
-        const link = document.createElement('a')
-        link.download = 'my-image.png'
-        link.href = dataURL
-        link.target = '_blank'
-        document.body.appendChild(link)
-        link.click()
-        link.parentNode!.removeChild(link)
-    }
+    // const testDownload = () => {
+    //     const dataURL = mainCanvas!.toDataURL()
+    //     const link = document.createElement('a')
+    //     link.download = 'my-image.png'
+    //     link.href = dataURL
+    //     link.target = '_blank'
+    //     document.body.appendChild(link)
+    //     link.click()
+    //     link.parentNode!.removeChild(link)
+    // }
 
     return (
         <Container>
-            {/* <div style={{ width: '100%', textAlign: 'center' }}> */}
-            <canvas ref={canvasRef} />
-            {/* </div> */}
-
+            {children}
             <PdfPageBtnContainer>
                 <div>
                     <button
