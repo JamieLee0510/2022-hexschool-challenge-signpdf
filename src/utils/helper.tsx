@@ -18,8 +18,7 @@ export const isProperFile = (filetype: string) => {
 
 export const getMousePos = (canvas: HTMLCanvasElement, evt: React.MouseEvent) => {
     const rect = canvas.getBoundingClientRect()
-    console.log('evt.clientX:', evt.clientX)
-    console.log('rect.left:', rect.left)
+
     return {
         x: evt.clientX - rect.left,
         y: evt.clientY - rect.top,
@@ -35,7 +34,7 @@ export const getTouchPos = (canvas: Element, evt: React.TouchEvent) => {
 
 export function customFabricDeleteIcon() {
     fabric.Object.prototype.controls.deleteControl = new fabric.Control({
-        x: -0.5,
+        x: 0.5,
         y: -0.5,
         cursorStyle: 'pointer',
         mouseUpHandler: deleteObject,
@@ -43,6 +42,7 @@ export function customFabricDeleteIcon() {
     })
 }
 function deleteObject(event: MouseEvent, transform: fabric.Transform, x: number, y: number) {
+    event.preventDefault()
     const { target } = transform
     const { canvas } = target
     canvas?.remove(target)

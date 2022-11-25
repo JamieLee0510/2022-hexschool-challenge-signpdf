@@ -10,6 +10,7 @@ import CanvasDraw from 'react-canvas-draw'
 import ReactModal from 'react-modal'
 
 import { addSignData, removeSignData } from '../signSlice'
+import SignatureDisplay from './SignatureDisplay'
 
 ReactModal.setAppElement('#root')
 const modalStyles = {
@@ -58,9 +59,8 @@ export default function SignModal({
         setSign(false)
     }
 
-    const [signing, setSign] = useState(false)
     const signatureList = useAppSelector((state) => state.sign.value)
-
+    const [signing, setSign] = useState(false)
     useEffect(() => {
         if (signatureList.length === 0) {
             setSign(true)
@@ -75,6 +75,7 @@ export default function SignModal({
             img.scaleToHeight(100)
             fabricCanvas?.add(img).renderAll()
         })
+        closeModal()
     }
 
     return (
@@ -123,31 +124,15 @@ export default function SignModal({
                     </div>
                 </>
             )}
-            {!signing &&
-                signatureList.map((signDataUrl, index) => (
-                    <div key={index}>
-                        <div>
-                            <img src={signDataUrl} alt='signature' />
-                        </div>
-                        <button
-                            type='button'
-                            onClick={() => {
-                                addSignature(signDataUrl)
-                                closeModal()
-                            }}
-                        >
-                            選擇簽名
-                        </button>
-                        <button
-                            type='button'
-                            onClick={() => {
-                                dispatch(removeSignData(index))
-                            }}
-                        >
-                            刪除簽名
-                        </button>
-                    </div>
-                ))}
+            {!signing && (
+                <SignatureDisplay
+                    signatureList={signatureList}
+                    addSignCallback={() => {
+                        setSign(true)
+                    }}
+                    signCallback={addSignature}
+                />
+            )}
         </ReactModal>
     )
 }
