@@ -2,7 +2,7 @@ import customFabricDeleteIcon from '@base/utils/helper'
 import { fabric } from 'fabric'
 import { useEffect, useRef, useState } from 'react'
 
-const useFabricCanvas = () => {
+const useFabricCanvas = (): fabric.Canvas | null => {
     // init render state
     const initRender = useRef(true)
     // variables between re-render

@@ -3,15 +3,7 @@ import { useAppSelector } from '@base/app/hooks'
 import { mockPdf } from '@base/utils/mock/pdfData'
 import { MainCanvas, SetMainCanvas } from '@base/utils/types'
 import { fabric } from 'fabric'
-import React, {
-    ReactNode,
-    useCallback,
-    useContext,
-    useEffect,
-    useLayoutEffect,
-    useRef,
-    useState,
-} from 'react'
+import React, { ReactNode } from 'react'
 import styled from 'styled-components'
 
 import useCanvasSize from './hooks/useCanvasSize'
